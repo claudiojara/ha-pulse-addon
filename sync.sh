@@ -41,6 +41,8 @@ rsync -a \
   --exclude='dist' \
   --exclude='.tanstack' \
   --exclude='data' \
+  --exclude='.env' \
+  --exclude='.env.*' \
   "$SRC/apps/"     "$DST/apps/"
 
 rsync -a \
