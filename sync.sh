@@ -1,29 +1,29 @@
 #!/usr/bin/env bash
 #
-# sync.sh — Copy the dashboard-web source tree into the add-on build context.
+# sync.sh — Copia el árbol de código de ha-pulse al build context del add-on.
 #
-# Phase 6.c-6.e workflow: HA Supervisor builds the add-on from the slug folder
-# `dashboard-web/`, so that folder needs to contain the full source code plus
-# the Dockerfile and .dockerignore. We keep those synced from the sibling
-# `dashboard-web` repo to avoid duplication.
+# Workflow de phases 6.c-6.e: HA Supervisor buildea el add-on desde la carpeta
+# del slug (`pulse/`), así que esa carpeta tiene que tener el código completo +
+# Dockerfile + .dockerignore. Los mantenemos sincronizados desde el repo
+# hermano `ha-pulse` para evitar duplicación.
 #
-# Usage (from the dashboard-web-addon repo root):
+# Uso (desde el root del repo ha-pulse-addon):
 #   ./sync.sh
 #
-# Phase 6.f will replace this with a thin Dockerfile that does
-# `FROM ghcr.io/neocjara/dashboard-web:<version>` and the sync becomes
-# unnecessary.
+# Phase 6.f reemplaza el Dockerfile syncado por uno thin que hace
+# `FROM ghcr.io/claudiojara/ha-pulse:<version>`. Cuando se publica vía
+# imagen, el sync deja de ser necesario.
 #
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SRC="${DASHBOARD_WEB_SRC:-$SCRIPT_DIR/../dashboard-web}"
-DST="$SCRIPT_DIR/dashboard-web"
+SRC="${HA_PULSE_SRC:-$SCRIPT_DIR/../ha-pulse}"
+DST="$SCRIPT_DIR/pulse"
 
 if [[ ! -d "$SRC" ]]; then
   echo "[sync] source repo not found at $SRC" >&2
-  echo "[sync] set DASHBOARD_WEB_SRC=/path/to/dashboard-web to override" >&2
+  echo "[sync] set HA_PULSE_SRC=/path/to/ha-pulse to override" >&2
   exit 1
 fi
 

@@ -1,16 +1,16 @@
-# dashboard-web-addon
+# ha-pulse-addon
 
 Catálogo de Home Assistant para
-[`dashboard-web`](https://github.com/neocjara/dashboard-web) — un dashboard
+[`ha-pulse`](https://github.com/claudiojara/ha-pulse) — un dashboard
 custom para HA con chat (Claude), control de entidades en tiempo real, vistas
 por habitación, streams de cámaras y controles de media player.
 
 ## Instalación (usuarios)
 
 1. **Settings → Add-ons → Add-on Store → ⋮ → Repositories**.
-2. Pegar la URL: `https://github.com/neocjara/dashboard-web-addon`.
+2. Pegar la URL: `https://github.com/claudiojara/ha-pulse-addon`.
 3. **Add**, cerrar el diálogo y refrescar.
-4. Buscar **Dashboard Web** en el store, click **Install**.
+4. Buscar **Pulse** en el store, click **Install**.
 5. Una vez instalado, **Configuration** → setear `anthropic_api_key`
    (opcional; si se deja vacío, el chat queda deshabilitado pero el resto
    del dashboard funciona).
@@ -34,11 +34,11 @@ Para iterar contra un HAOS local sin pasar por `ghcr.io`:
 ```bash
 # Repos como hermanos:
 ~/Workspace/personal/home-assistant/
-├── dashboard-web/         # código
-└── dashboard-web-addon/   # este repo
+├── ha-pulse/         # código
+└── ha-pulse-addon/   # este repo
 
 # Deploy contra el HAOS de dev (Tailscale + ha apps update/rebuild):
-cd dashboard-web-addon
+cd ha-pulse-addon
 ./deploy-local.sh
 ```
 
@@ -52,12 +52,12 @@ catálogo) ver [`../ha-dashboard/RELEASING.md`](../ha-dashboard/RELEASING.md).
 ## Estructura del repo
 
 ```
-dashboard-web-addon/
+ha-pulse-addon/
 ├── repository.yaml          # metadata del catálogo (name, url, maintainer)
 ├── README.md                # este archivo
 ├── deploy-local.sh          # deploy a HAOS de dev (build local)
 ├── sync.sh                  # mirror del código fuente al build context
-└── dashboard-web/           # carpeta del add-on (slug)
+└── pulse/                  # carpeta del add-on (slug)
     ├── config.yaml          # manifest del add-on (committeado)
     ├── README.md            # docs del add-on para el usuario final
     └── (apps/, packages/, Dockerfile sincronizados, gitignored)
@@ -65,8 +65,8 @@ dashboard-web-addon/
 
 ## Referencias
 
-- Código: <https://github.com/neocjara/dashboard-web>
-- Imagen publicada: `ghcr.io/neocjara/dashboard-web:<version>` y `:latest`
+- Código: <https://github.com/claudiojara/ha-pulse>
+- Imagen publicada: `ghcr.io/claudiojara/ha-pulse:<version>` y `:latest`
 - Lecciones acumuladas (HA Supervisor + Ingress + deploy):
   [`../ha-dashboard/LESSONS.md`](../ha-dashboard/LESSONS.md)
 - Workflow de publicación:

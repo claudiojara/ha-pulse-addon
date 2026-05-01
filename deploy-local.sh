@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 #
-# deploy-local.sh — Sync, push and (re)build the dashboard-web add-on on the
-# local HAOS box. Used during phases 6.c-6.e to iterate against real Home
-# Assistant before the public ghcr.io image exists (Phase 6.f).
+# deploy-local.sh — Sync, push and (re)build the ha-pulse add-on on the local
+# HAOS box. Used during development to iterate against real Home Assistant.
+# For the public install flow via ghcr.io, see ../ha-dashboard/RELEASING.md.
 #
 # Pipeline:
 #   1. ./sync.sh           refresh add-on build context from the source repo
-#   2. rsync over SSH      push to /addons/dashboard-web on HAOS
-#   3. ha apps reload      Supervisor rescans /addons
+#   2. rsync over SSH      push to /addons/pulse on HAOS
+#   3. ha store reload     Supervisor rescans /addons
 #   4. install OR rebuild  first time vs iteration (auto-detected)
 #   5. (optional) tail     ha apps logs -f
 #
@@ -26,9 +26,10 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 HAOS_HOST="${HAOS_HOST:-ha-c.tail49f016.ts.net}"
 HAOS_USER="${HAOS_USER:-root}"
-# Internal slug from config.yaml — used for the on-disk path under /addons/.
-SLUG="dashboard-web"
-# Supervisor app slug — local repo prefixes the internal slug with `local_`.
+# Internal slug from config.yaml — used for the on-disk path under /addons/
+# AND for the build context folder inside this repo (./pulse/).
+SLUG="pulse"
+# Supervisor app slug — local install prefixes the internal slug with `local_`.
 APP="local_${SLUG}"
 REMOTE_PATH="/addons/${SLUG}"
 SSH_TARGET="${HAOS_USER}@${HAOS_HOST}"
@@ -38,7 +39,7 @@ TAIL_LOGS=0
 
 usage() {
   cat <<'EOF'
-deploy-local.sh — push the dashboard-web add-on to a local HAOS box.
+deploy-local.sh — push the ha-pulse add-on to a local HAOS box.
 
 Usage:
   ./deploy-local.sh [--no-restart] [--logs]

@@ -44,4 +44,4 @@ snapshot recupera todas las preferencias.
 
 ## Repositorio del catálogo
 
-<https://github.com/neocjara/dashboard-web-addon>
+<https://github.com/claudiojara/ha-pulse-addon>
