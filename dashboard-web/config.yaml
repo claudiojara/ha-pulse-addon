@@ -1,6 +1,6 @@
 ---
 name: Dashboard Web
-version: "0.1.0"
+version: "0.2.1"
 slug: dashboard-web
 description: >-
   Custom Home Assistant dashboard — chat with Claude, real-time entity control,
@@ -13,7 +13,15 @@ init: false
 startup: application
 boot: auto
 homeassistant_api: true
-ports:
-  "3001/tcp": 3001
-ports_description:
-  "3001/tcp": Dashboard web UI
+ingress: true
+ingress_port: 3001
+panel_icon: mdi:view-dashboard
+panel_title: Dashboard
+options:
+  log_level: info
+  anthropic_api_key: ""
+  anthropic_model: claude-sonnet-4-6
+schema:
+  log_level: list(debug|info|warn|error)
+  anthropic_api_key: password
+  anthropic_model: match(^claude-[a-z0-9-]+$)
