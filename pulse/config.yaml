@@ -1,6 +1,6 @@
 ---
 name: Pulse
-version: "0.4.0"
+version: "0.4.1"
 slug: pulse
 description: >-
   Custom Home Assistant dashboard — chat with Claude, real-time entity control,
