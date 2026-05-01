@@ -88,6 +88,12 @@ rsync -av --delete \
   "${SCRIPT_DIR}/${SLUG}/" \
   "${SSH_TARGET}:${REMOTE_PATH}/"
 
+# The catalog config.yaml carries `image: ghcr.io/...` so end-user installs
+# pull the prebuilt image. For local development we want Supervisor to build
+# from the synced source tree instead, so we strip that line on the HAOS copy.
+log "stripping image: line for local-build mode"
+ssh "$SSH_TARGET" "sed -i '/^image:/d' ${REMOTE_PATH}/config.yaml"
+
 if [[ $NO_RESTART -eq 1 ]]; then
   log "--no-restart: source pushed, skipping rebuild"
   exit 0

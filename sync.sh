@@ -43,6 +43,9 @@ rsync -a \
   --exclude='data' \
   --exclude='.env' \
   --exclude='.env.*' \
+  --exclude='.playwright-mcp' \
+  --exclude='playwright-report' \
+  --exclude='test-results' \
   "$SRC/apps/"     "$DST/apps/"
 
 rsync -a \

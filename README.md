@@ -1,57 +1,73 @@
 # dashboard-web-addon
 
-Home Assistant add-on repository for [`dashboard-web`](https://github.com/neocjara/dashboard-web)
-— a custom HA dashboard with chat (Claude), real-time entity control,
-per-room views, camera streams and media player controls.
+Catálogo de Home Assistant para
+[`dashboard-web`](https://github.com/neocjara/dashboard-web) — un dashboard
+custom para HA con chat (Claude), control de entidades en tiempo real, vistas
+por habitación, streams de cámaras y controles de media player.
 
-## Status
-
-**Phase 6.c** — local install path is functional. Full "Add custom repository"
-flow with a public `ghcr.io` image lands in phase 6.f.
-
-## Public install (phase 6.f, not yet available)
+## Instalación (usuarios)
 
 1. **Settings → Add-ons → Add-on Store → ⋮ → Repositories**.
-2. Paste this repo URL: `https://github.com/neocjara/dashboard-web-addon`.
-3. Add, close, refresh.
-4. Find **Dashboard Web** in the store, install, start.
+2. Pegar la URL: `https://github.com/neocjara/dashboard-web-addon`.
+3. **Add**, cerrar el diálogo y refrescar.
+4. Buscar **Dashboard Web** en el store, click **Install**.
+5. Una vez instalado, **Configuration** → setear `anthropic_api_key`
+   (opcional; si se deja vacío, el chat queda deshabilitado pero el resto
+   del dashboard funciona).
+6. **Save** → **Start**.
+7. El panel **Dashboard** aparece en el sidebar de Home Assistant.
 
-## Local install (phase 6.c, current)
+### Opciones del add-on
 
-Until the public image is published, you install via the HAOS local add-on
-mechanism using a synced source tree. Steps:
+| Opción              | Tipo       | Default                | Notas                                              |
+|---------------------|------------|------------------------|----------------------------------------------------|
+| `log_level`         | enum       | `info`                 | `debug`, `info`, `warn`, `error`                   |
+| `anthropic_api_key` | password   | `""`                   | API key de Anthropic. Vacío deshabilita el chat    |
+| `anthropic_model`   | string     | `claude-sonnet-4-6`    | Slug del modelo. Permite override por usuario      |
 
-1. Clone both repos as siblings:
-   ```bash
-   ~/Workspace/personal/home-assistant/
-   ├── dashboard-web/         # the code
-   └── dashboard-web-addon/   # this repo
-   ```
-2. Sync the source into the add-on build context:
-   ```bash
-   cd dashboard-web-addon
-   ./sync.sh
-   ```
-3. Copy the `dashboard-web/` folder of THIS repo into your HAOS at
-   `/addons/dashboard-web/`. Easiest path: install the
-   [Samba share add-on](https://github.com/home-assistant/addons/tree/master/samba)
-   on your HA, mount `\\homeassistant.local\addons` from your Mac, drag the folder.
-4. In HA: **Settings → Add-ons → ⋮ → Check for updates**. The add-on
-   appears under **Local add-ons**.
-5. Click **Install**, wait for the build (first time is slow), then **Start**.
-6. Open `http://homeassistant.local:3001`.
+Cambios de opciones requieren restart del add-on (estándar de HA).
 
-## Repository layout
+## Desarrollo (mantenedores)
+
+Para iterar contra un HAOS local sin pasar por `ghcr.io`:
+
+```bash
+# Repos como hermanos:
+~/Workspace/personal/home-assistant/
+├── dashboard-web/         # código
+└── dashboard-web-addon/   # este repo
+
+# Deploy contra el HAOS de dev (Tailscale + ha apps update/rebuild):
+cd dashboard-web-addon
+./deploy-local.sh
+```
+
+`deploy-local.sh` sincroniza el código fuente, lo copia al HAOS por SSH y
+fuerza un build local del add-on. Strip-ea la línea `image:` del catálogo
+para que Supervisor compile en lugar de bajar la imagen pública.
+
+Para publicar una versión nueva al público (CI multi-arch + bump del
+catálogo) ver [`../ha-dashboard/RELEASING.md`](../ha-dashboard/RELEASING.md).
+
+## Estructura del repo
 
 ```
 dashboard-web-addon/
-├── repository.yaml          # catalog metadata
-├── README.md                # this file
-├── sync.sh                  # populates dashboard-web/ from ../dashboard-web
-└── dashboard-web/           # the add-on slug folder
-    ├── config.yaml          # add-on manifest (committed)
-    ├── README.md            # end-user add-on docs (committed)
-    ├── Dockerfile           # synced, gitignored
-    ├── apps/, packages/...  # synced, gitignored
-    └── ...
+├── repository.yaml          # metadata del catálogo (name, url, maintainer)
+├── README.md                # este archivo
+├── deploy-local.sh          # deploy a HAOS de dev (build local)
+├── sync.sh                  # mirror del código fuente al build context
+└── dashboard-web/           # carpeta del add-on (slug)
+    ├── config.yaml          # manifest del add-on (committeado)
+    ├── README.md            # docs del add-on para el usuario final
+    └── (apps/, packages/, Dockerfile sincronizados, gitignored)
 ```
+
+## Referencias
+
+- Código: <https://github.com/neocjara/dashboard-web>
+- Imagen publicada: `ghcr.io/neocjara/dashboard-web:<version>` y `:latest`
+- Lecciones acumuladas (HA Supervisor + Ingress + deploy):
+  [`../ha-dashboard/LESSONS.md`](../ha-dashboard/LESSONS.md)
+- Workflow de publicación:
+  [`../ha-dashboard/RELEASING.md`](../ha-dashboard/RELEASING.md)
